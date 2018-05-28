@@ -16,9 +16,10 @@ class TestTaskBase(LogTestCase):
                     pub_addr="10.10.10.10",
                     pub_port=1023)
 
-        task_header = TaskHeader("xyz", "DEFAULT", task_owner=node)
+        task_header = TaskHeader(
+            task_id="xyz", environment="DEFAULT", task_owner=node)
         # ignore dynamic properties
-        task_header.last_checking = 0
+        task_header.fixed_header.last_checking = 0
 
         task_header_dict = task_header.to_dict()
         serialized = CBORSerializer.dumps(task_header_dict)
@@ -26,7 +27,7 @@ class TestTaskBase(LogTestCase):
         task_header_from_dict = TaskHeader.from_dict(deserialized)
 
         # ignore dynamic properties
-        task_header_from_dict.last_checking = 0
+        task_header_from_dict.fixed_header.last_checking = 0
 
         assert task_header_from_dict.to_dict() == task_header_dict
         assert isinstance(task_header_from_dict.task_owner, Node)
